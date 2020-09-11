@@ -1,5 +1,125 @@
 <!DOCTYPE html>
-<html>
-THIS IS A TEST 3
-<img src="./board.png">
+<h1> KenKenVS </h1>
+<p>
+    Project Started in May 2020. <a href = "https://www.kenkenpuzzle.com/"> kenkenpuzzle.com</a><br>
+    <i>
+        Update as of September 10th, 2020: Single-player functionality should be ready relatively soon. The puzzle
+        database needs to be set up and linked but all other components are minor and not extremely critical to
+        the current version. Currently the user can solve puzzles and generate new puzzles on the UI. Our hope is to
+        have single player released by the end of September.
+    </i>
+</p>
+<hr>
+<h2> User Interface </h2>
+Below is the current user interface when the user chooses to solve a puzzle. This includes all the functions that you
+would come to expect from a UI. <br>
+<br>
+<u> Board </u> <br>
+To create the board, the frontend receives a KenKen JSON from the backend that is then interpreted by a function that
+constructs the actual HTML board that you see. This board allows the user to input numbers and notes using the toolbar
+or the keyboard. I have inputted a few numbers and notes as an example.
+<i> Note: The board prevents the user from entering numbers outside the range of 1 <= x <= dimension. </i> <br>
+<br>
+<u> Toolbar </u>
+<ul>
+    <li>
+        Normal/Notes: These buttons can be toggled based on whether the user wants to put notes in the grid or numbers.
+        Only one can be selected at once.
+    </li>
+    <li>
+        Keypad: The keypad can be used instead of the keyboard to input numbers or notes. Only numbers between 1 and the
+        dimension of the puzzle appear on the puzzle because these are the only valid numbers in the puzzle.
+    </li>
+    <li>
+        Delete: Deletes all elements of a selected cell (can select a cell by clicking on it, confirmation when highlighted).
+    </li>
+    <li>
+        Restart: Resets all progress (does not restart the timer). Prompts a confirmation popup.
+    </li>
+</ul>
+<u> Buttons </u>
+<ul>
+    <li>
+        Flag: Flag is only present in single-player. The purpose of flag is so that users can flag a puzzle that has any
+        issues (multiple solutions for example) before they are added to the competitive multiplayer pool.
+    </li>
+    <li>
+        Submit: When clicked, provides feedback based on accuracy, speed, and compares you to your opponent if in
+        multiplayer.
+    </li>
+    <li>
+        New Puzzle: Prompts a popup where users can select a new puzzle.
+    </li>
+</ul>
+<br>
+<img src="./board.png" style="position: relative;">
+<h2> KenKen Generation </h2>
+Our KenKen database is filled with our own generated puzzles. There are three components to this generation: Latin Square
+Generation, Cage Generation, Operation Generaion. Together, these three create a random KenKen. <br>
+<br>
+<u> Latin Square Generation </u> <br>
+As a reminder, a latin square is a square of size x such that each number 1 - x appears exactly once in each column and
+row. Given dimension x, we first randomly sort a list of numbers from 1 to x. I'll use 6 as an example for the remainder
+of this section, but the process is the same for any dimension. <br>
+<br>
+<table>
+    <tr>
+        <td>3&nbsp;&nbsp;&nbsp;</td><td>1&nbsp;&nbsp;&nbsp;</td><td>6&nbsp;&nbsp;&nbsp;</td><td>5&nbsp;&nbsp;&nbsp;</td>
+        <td>4&nbsp;&nbsp;&nbsp;</td><td>2&nbsp;&nbsp;&nbsp;</td>
+    </tr>
+</table> <br>
+Then, we fill in each subsequent row of the board with an offset of 1 to ensure that we create a Latin Square in the
+process. <br>
+<br>
+<table>
+    <tr>
+        <td>3&nbsp;&nbsp;&nbsp;</td><td>1&nbsp;&nbsp;&nbsp;</td><td>6&nbsp;&nbsp;&nbsp;</td>
+        <td>5&nbsp;&nbsp;&nbsp;</td><td>4&nbsp;&nbsp;&nbsp;</td><td>2&nbsp;&nbsp;&nbsp;</td>
+    </tr>
+    <tr>
+        <td>1</td><td>6</td><td>5</td><td>4</td><td>2</td><td>3</td>
+    </tr>
+    <tr>
+        <td>6</td><td>5</td><td>4</td><td>2</td><td>3</td><td>1</td>
+    </tr>
+    <tr>
+        <td>5</td><td>4</td><td>2</td><td>3</td><td>1</td><td>6</td>
+    </tr>
+    <tr>
+        <td>4</td><td>2</td><td>3</td><td>1</td><td>6</td><td>5</td>
+    </tr>
+    <tr>
+        <td>2</td><td>3</td><td>1</td><td>6</td><td>5</td><td>4</td>
+    </tr>
+</table> <br>
+Observe that if we switch any two rows or columns, we are still left with a latin square. Therefore our next step is
+to randomly swap rows and columns. This then leaves us with a random latin square like the one below. <br>
+<br>
+<table>
+    <tr>
+        <td>4&nbsp;&nbsp;&nbsp;</td><td>3&nbsp;&nbsp;&nbsp;</td><td>2&nbsp;&nbsp;&nbsp;</td>
+        <td>1&nbsp;&nbsp;&nbsp;</td><td>6&nbsp;&nbsp;&nbsp;</td><td>5&nbsp;&nbsp;&nbsp;</td>
+    </tr>
+    <tr>
+        <td>3</td><td>6</td><td>1</td><td>4</td><td>5</td><td>2</td>
+    </tr>
+    <tr>
+        <td>6</td><td>4</td><td>5</td><td>2</td><td>1</td><td>3</td>
+    </tr>
+    <tr>
+        <td>5</td><td>2</td><td>6</td><td>3</td><td>4</td><td>1</td>
+    </tr>
+    <tr>
+        <td>1</td><td>5</td><td>3</td><td>6</td><td>2</td><td>4</td>
+    </tr>
+    <tr>
+        <td>2</td><td>1</td><td>4</td><td>5</td><td>3</td><td>6</td>
+    </tr>
+</table> <br>
+<u> Cage and Operation Generation </u> <br>
+To generate cages, we start in the top left corner of the grid, then randomly "snake" until the snake has nowhere to move.
+We then restart the snake at a random point then repeat the process. The snakes are then partitioned based on
+predetermined distributions and these partitions are the cages. For each cage, an operation is generated based on a set
+distribution. These distributions are chosen whether subtraction and/or division is valid for a cage (addition and
+multiplication are always valid). 
 </html>
